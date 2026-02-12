@@ -33,6 +33,7 @@ pipeline {
 					echo 'pushing docker image to DockerHub...'
 				}
 			}
+		}
 		stage('Install Kubectl & ArgoCD CLI'){
 			steps {
 				sh '''
