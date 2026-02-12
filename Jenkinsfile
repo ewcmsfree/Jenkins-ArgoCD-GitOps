@@ -3,9 +3,7 @@ pipeline {
 	stages {
 		stage('Checkout Github'){
 			steps {
-				sh '''
-					echo 'checking out code...'
-				'''
+				git branch: 'main', credentialsId: 'GitOps-token-GitHub', url: 'https://github.com/ewcmsfree/Jenkins-ArgoCD-GitOps.git'
 			}
 		}		
 		stage('Install node dependencies'){
