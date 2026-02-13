@@ -42,10 +42,13 @@ pipeline {
 				}
 			}
 		}
-		stage('Install ArgoCD CLI'){
+		stage('Install Kubectl & ArgoCD CLI'){
 			steps {
 				sh '''
 					echo 'installing ArgoCD cli...'
+					sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+					sudo chmod +x kubectl
+					sudo mv kubectl /usr/local/bin/kubectl
 					sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
 					sudo chmod +x /usr/local/bin/argocd
 				'''
