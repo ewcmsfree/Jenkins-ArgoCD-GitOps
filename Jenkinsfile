@@ -70,10 +70,10 @@ pipeline {
 
 	post {
 		success {
-			echo 'Build & Deploy completed succesfully!'
+			echo 'Build and Deploy completed succesfully!'
 		}
 		failure {
-			echo 'Build & Deploy failed. Check logs.'
+			echo 'Build and Deploy failed. Check logs.'
 		}
 	}
 }
