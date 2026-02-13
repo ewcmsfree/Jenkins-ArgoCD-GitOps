@@ -46,7 +46,7 @@ pipeline {
 			steps {
 				sh '''
 					echo 'installing ArgoCD cli...'
-					curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+					curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v3.3.0/argocd-linux-amd64
 					chmod +x /usr/local/bin/argocd
 				'''
 			}
