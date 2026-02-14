@@ -48,24 +48,31 @@ pipeline {
 		stage('Install Kubectl & ArgoCD CLI'){
 		    steps {
 		        sh '''
-		            # 检查 kubectl 是否存在
-		            if ! command -v kubectl &> /dev/null; then
-		                echo "kubectl not found, installing..."
-		                curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-		                sudo chmod +x kubectl
-		                sudo mv kubectl /usr/local/bin/kubectl
+		            # 定义安装目录
+		            INSTALL_DIR="/usr/local/bin"
+
+		            # 检查 kubectl
+		            if command -v kubectl >/dev/null 2>&1; then
+		                echo "--- kubectl 已存在，跳过安装 ---"
 		            else
-		                echo "kubectl is already installed: $(kubectl version --client --short 2>/dev/null || echo 'version unknown')"
+		                echo "--- 正在安装 kubectl ---"
+		                curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+		                chmod +x kubectl
+		                sudo mv kubectl $INSTALL_DIR/
 		            fi
 
-		            # 检查 argocd 是否存在
-		            if [ ! -f /usr/local/bin/argocd ]; then
-		                echo "ArgoCD CLI not found, installing..."
-		                sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-		                sudo chmod +x /usr/local/bin/argocd
+		            # 检查 argocd
+		            if [ -f "$INSTALL_DIR/argocd" ]; then
+		                echo "--- ArgoCD CLI 已存在，跳过安装 ---"
 		            else
-		                echo "ArgoCD CLI is already installed: $(argocd version --client --short 2>/dev/null || echo 'version unknown')"
+		                echo "--- 正在安装 ArgoCD CLI ---"
+		                sudo curl -sSL -o $INSTALL_DIR/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+		                sudo chmod +x $INSTALL_DIR/argocd
 		            fi
+		            
+		            # 最后验证一下版本
+		            kubectl version --client
+		            argocd version --client
 		        '''
 		    }
 		}
