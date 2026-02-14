@@ -15,6 +15,7 @@ spec:
       containers:
       - name: node-app
         image: iquantc/iquant-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
 
