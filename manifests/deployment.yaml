@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: iquantc/iquant-app:latest
+        image: wuzhijun2023/gitops-app:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
