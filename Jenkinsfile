@@ -57,9 +57,9 @@ pipeline {
 		stage('Apply Kubernetes Manifests & Sync App with ArgoCD'){
 			steps {
 				script {
-					kubeconfig(credentialsId: 'k8s-config', serverUrl: 'https://192.168.0.230:6443') {
+					kubeconfig(credentialsId: 'k8s-config', serverUrl: 'https://k8s.home:6443') {
 						sh '''
-							argocd login 192.168.0.230:30412 --username admin --password $(kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) --insecure
+							argocd login k8s.home:30412 --username admin --password wzj@1980351 --insecure
 							argocd app sync argocdjenkins
 						'''
 					}
