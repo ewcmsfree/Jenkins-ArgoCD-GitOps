@@ -46,16 +46,28 @@ pipeline {
 			}
 		}
 		stage('Install Kubectl & ArgoCD CLI'){
-			steps {
-				sh '''
-					echo 'installing ArgoCD cli...'
-					sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-					sudo chmod +x kubectl
-					sudo mv kubectl /usr/local/bin/kubectl
-					sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-					sudo chmod +x /usr/local/bin/argocd
-				'''
-			}
+		    steps {
+		        sh '''
+		            # 检查 kubectl 是否存在
+		            if ! command -v kubectl &> /dev/null; then
+		                echo "kubectl not found, installing..."
+		                curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+		                sudo chmod +x kubectl
+		                sudo mv kubectl /usr/local/bin/kubectl
+		            else
+		                echo "kubectl is already installed: $(kubectl version --client --short 2>/dev/null || echo 'version unknown')"
+		            fi
+
+		            # 检查 argocd 是否存在
+		            if [ ! -f /usr/local/bin/argocd ]; then
+		                echo "ArgoCD CLI not found, installing..."
+		                sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+		                sudo chmod +x /usr/local/bin/argocd
+		            else
+		                echo "ArgoCD CLI is already installed: $(argocd version --client --short 2>/dev/null || echo 'version unknown')"
+		            fi
+		        '''
+		    }
 		}
 		stage('Apply Kubernetes Manifests & Sync App with ArgoCD'){
 			steps {
