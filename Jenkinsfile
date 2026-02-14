@@ -6,7 +6,8 @@ pipeline {
 	environment {
 		DOCKER_HUB_REPO = 'wuzhijun2023/gitops-app'
 		DOCKER_HUB_CREDENTIALS_ID = 'gitops-dockerhub'
-		K8S_SERVER_URL = 'https://192.168.0.230:6443'
+		K8S_SERVER_URL = 'https://k8s.home:6443'
+		ARGOCD_SERVER_HOST = 'k8s.home:30412'
 		ARGOCD_AUTH_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJ3dXpoaWp1bjphcGlLZXkiLCJuYmYiOjE3NzEwNjA5NDcsImlhdCI6MTc3MTA2MDk0NywianRpIjoiamVua2lucyJ9.GddAcvHScXQkHVM14BpZcYNuD2dXIRowJDGpDMckTRQ'
 	}
 	stages {
@@ -63,7 +64,7 @@ pipeline {
 						sh '''
 							# argocd login 192.168.0.230:30412 --username admin --password $(kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) --insecure
 							# argocd app sync argocdjenkins
-							argocd app sync argocdjenkins --server ${K8S_SERVER_URL} --auth-token ${ARGOCD_AUTH_TOKEN} --insecure
+							argocd app sync argocdjenkins --server ${ARGOCD_SERVER_HOST} --auth-token ${ARGOCD_AUTH_TOKEN} --insecure
 						'''
 					}
 				}
